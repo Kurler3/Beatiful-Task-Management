@@ -1,0 +1,143 @@
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_main.xml	(date 1609072678625)
++++ app/src/main/res/layout/activity_main.xml	(date 1609072678625)
+@@ -0,0 +1,112 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:background="#13141B"
++    tools:context=".MainActivity">
++
++    <View
++        android:id="@+id/view"
++        android:layout_width="0dp"
++        android:layout_height="560dp"
++        android:background="@drawable/background_contrast"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent" />
++    <Button
++        android:id="@+id/continue_btn"
++        android:layout_width="283dp"
++        android:layout_height="wrap_content"
++        android:layout_marginBottom="36dp"
++        android:background="@drawable/continue_button"
++        android:fontFamily="@font/lobster"
++        android:text="@string/continue_button"
++        android:textAllCaps="false"
++        android:textColor="#ffff"
++        android:textSize="19sp"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent" />
++
++    <ImageView
++        android:id="@+id/bubbles_first_screen"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="180dp"
++        android:layout_marginTop="592dp"
++        android:contentDescription="@string/continue_bubbles"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent"
++        app:srcCompat="@drawable/continue_bubbles_1"/>
++
++    <ImageView
++        android:id="@+id/imageView"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        app:layout_constraintBottom_toBottomOf="@+id/view"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintHorizontal_bias="0.496"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="@+id/view"
++        app:layout_constraintVertical_bias="0.361"
++        app:srcCompat="@drawable/first_screen_image_1" />
++
++    <Button
++        android:id="@+id/skip_btn"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="28dp"
++        android:layout_marginEnd="36dp"
++        android:background="@drawable/skip_btn"
++        android:fontFamily="@font/lobster"
++        android:text="@string/skip_btn"
++        android:textAllCaps="false"
++        android:textSize="19sp"
++        android:theme="@style/skip_button"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintTop_toTopOf="parent"/>
++
++    <TextView
++        android:id="@+id/title_to_change"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:fontFamily="@font/lobster"
++        android:text="@string/first_screen_title_1"
++        android:textColor="#ffff"
++        android:textSize="31sp"
++        app:layout_constraintBottom_toBottomOf="@+id/view"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintHorizontal_bias="0.247"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/imageView"
++        app:layout_constraintVertical_bias="0.267" />
++
++    <TextView
++        android:id="@+id/textView2"
++        android:layout_width="306dp"
++        android:layout_height="57dp"
++        android:layout_marginBottom="32dp"
++        android:text="@string/description_home_screen"
++        android:textColor="#ADADAD"
++        android:textSize="14sp"
++        app:layout_constraintBottom_toBottomOf="@+id/view"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintHorizontal_bias="0.447"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/title_to_change"
++        app:layout_constraintVertical_bias="1.0" />
++
++    <ImageButton
++        android:id="@+id/back_arrow_btn"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="28dp"
++        android:background="@drawable/back_button"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintHorizontal_bias="0.068"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent"
++        app:srcCompat="@drawable/back_arrow" />
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+diff --git app/src/main/res/drawable/back_arrow.png app/src/main/res/drawable/back_arrow.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..51f28a8ccc8ac34e6e6322b02681d2325d1c5183
+GIT binary patch
+literal 804
+zc$@(w1Ka$GP)<h;3K|Lk000e1NJLTq000{R000{Z1^@s6jnwp200009a7bBm000XU
+z000XU0RWnu7ytkO0drDELIAGL9O(c600d`2O+f$vv5yP<VFdsH0=Y><K~#7F?N-fe
+z6HySK_jc1Z!PaP{X^dK0qx9f^;H4EW-o!&cgjy6@MGw7r5}~LU5ii#2Q9TGAjG{dV
+zicrCeBK4xCh7?0Bwn$SVqJ-3aGtPcw*?d&u8tJ9Ku-SPZv%mSx%)SI*19gC?WmC^M
+z=^tZr`(YKb-OKURiwnX4ACR?dO2smRQUo4}hQO25u7v~O6Mt4VKCMTiodY1~HVC0x
+z4g@(8G`KX{`4s*VYbrBS7malt=Wr%@r~?t07k{>JgeSlU^tFg)w}0xBB(D(BW_Llb
+zE&-oc0k47&R8^L0=Nf^$!9?Mb1;kkv*S|8l`wjR&Y0bDsZQ;luNO=n?RLc(-ki*&2
+z@fq+5mn=T<s)btHjv0A%2?=dQWM7;+)z}=I47P;caVC{gXgetuTYLa2cTN@O*f69t
+zG=XpD`l3nQCQ3KzvEZ4e=HPiDM9A(1vU&n+TVs2S2!YU!(ONe{b@q{25ogY9BQpxq
+z7N}4WyyTrd7Fl5Drm==l!`X5ovY!G~$Q`@5&udrsm{D|Cg|Nt)w3AYbt&WeIKI?+=
+zF}XExiEJ(QH-T%D<4lf=MOOHkzs73wR*F0kT6Zi}S|lK(N<~<n1+x9oL#7s&?i79$
+zE~0@e<!St9BCZ<SnX+z7H-@^xM@WjByf5sn5gP{IE|Um6=l%lg6!sp)hCOhnJZl2Y
+zs%fdr(a6`5_pE1{^yPf+5Wl<+nM^Nf27q}9*q=Py{u+Fu>Os73Dm$cru7h(_6;sFL
+z^QcjO+9zSv<7(SX>pgz(DKJlXPmNe*2mPY^dlFv`LcPe$AIC_``vgfEVUh)JGcb0L
+z(uSd4WENp>uhHI|d<=@t@z8KP4e1*gco%%2roRR82a7|3v<XD~jwnYm1CeL&Ke0EF
+i?e3V$b;1VL8@~Z{-{8hk$NV|~0000<MNUMnLSTaE5M=ZK
+
