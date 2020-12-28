@@ -14,7 +14,7 @@
         android:background="@drawable/background_contrast"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
     <Button
         android:id="@+id/continue_btn"
         android:layout_width="283dp"
@@ -26,32 +26,10 @@
         android:textAllCaps="false"
         android:textColor="#ffff"
         android:textSize="19sp"
+        android:theme="@style/continue_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-    <ImageView
-        android:id="@+id/bubbles_first_screen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="180dp"
-        android:layout_marginTop="592dp"
-        android:contentDescription="@string/continue_bubbles"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/continue_bubbles_1"/>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view"
-        app:layout_constraintVertical_bias="0.361"
-        app:srcCompat="@drawable/first_screen_image_1" />
-
     <Button
         android:id="@+id/skip_btn"
         android:layout_width="wrap_content"
@@ -67,20 +45,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/title_to_change"
+    <ImageButton
+        android:id="@+id/back_arrow_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/lobster"
-        android:text="@string/first_screen_title_1"
-        android:textColor="#ffff"
-        android:textSize="31sp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/back_button"
+        android:theme="@style/back_arrow_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.068"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_arrow" />
+
+    <ImageView
+        android:id="@+id/bubbles_first_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="604dp"
+        android:contentDescription="@string/continue_bubbles"
+        app:layout_constraintBottom_toTopOf="@+id/continue_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/continue_bubbles_1" />
+
+    <ImageView
+        android:id="@+id/main_image_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.247"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.267" />
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:layout_constraintVertical_bias="0.361"
+        app:srcCompat="@drawable/first_screen_image_1" />
 
     <TextView
         android:id="@+id/textView2"
@@ -97,15 +97,20 @@
         app:layout_constraintTop_toBottomOf="@+id/title_to_change"
         app:layout_constraintVertical_bias="1.0" />
 
-    <ImageButton
-        android:id="@+id/back_arrow_btn"
+
+    <TextView
+        android:id="@+id/title_to_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:background="@drawable/back_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.068"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back_arrow" />
+        android:fontFamily="@font/lobster"
+        android:text="@string/first_screen_title_1"
+            android:textColor="#ffff"
+            android:textSize="31sp"
+            app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.247"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_image_change"
+            app:layout_constraintVertical_bias="0.289" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

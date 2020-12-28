@@ -16,4 +16,13 @@
     <style name="skip_button" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">#FE7A00</item>
     </style>
+    <style name="continue_button" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#2864FF</item>
+    </style>
+    <style name="back_arrow_button" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#F7F8FA</item>
+    </style>
+    <style name="add_task_btn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorSecondary">#2864FF</item>
+    </style>
 </resources>

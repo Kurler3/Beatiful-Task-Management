@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="19dp">
+
+    <RelativeLayout
+        android:layout_width="54dp"
+        android:layout_height="77dp"
+        android:background="@drawable/day_item">
+
+        <TextView
+            android:id="@+id/day_item_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="30sp"
+            android:textColor="#ffff"
+            android:fontFamily="@font/lobster"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"/>
+        <TextView
+            android:id="@+id/day_item_day_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sun"
+            android:textSize="16sp"
+            android:textColor="#ffff"
+            android:layout_below="@id/day_item_number"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/lobster"/>
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>
