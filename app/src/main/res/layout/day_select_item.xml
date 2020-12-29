@@ -3,7 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="19dp">
+    app:cardCornerRadius="19dp"
+    android:layout_marginLeft="8dp">
 
     <RelativeLayout
         android:layout_width="54dp"

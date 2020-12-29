@@ -3,6 +3,7 @@ package com.miguel.figmataskapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mSkipBtn.setOnClickListener(view -> {
             //TODO
             //Start an intent to the tasks screen
+            LaunchHomeScreen();
         });
 
         // Continue Button
@@ -93,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // If the current screen is the third, then clicking the continue button
                 // Will make the user enter the tasks screen
-
                 //TODO
                 // Start an intent to the Tasks screen
+                LaunchHomeScreen();
             }
         }else{
             if (currentScreen == 2) {
@@ -155,5 +157,8 @@ public class MainActivity extends AppCompatActivity {
         //-------------------------------------------------
         ImageViewAnimatedChange(this, mMainImageChange, nextMainImage);
         //-----------------------------------------------
+    }
+    private void LaunchHomeScreen(){
+        startActivity(new Intent(this, HomeScreen.class));
     }
 }

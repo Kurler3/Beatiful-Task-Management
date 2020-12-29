@@ -2,7 +2,7 @@
     <string name="app_name">FigmaTaskApp</string>
     <string name="continue_button">Continue</string>
     <string name="continue_bubbles">continue_bubbles</string>
-    <string name="skip_btn">skip</string>
+    <string name="skip_btn">Skip</string>
     <string name="description_home_screen">Its very difficult to manage everything. This is a tool designed to help you manage your time.</string>
     <string name="first_screen_title_1">Manage your time</string>
     <string name="first_screen_title_2">Work on time</string>
