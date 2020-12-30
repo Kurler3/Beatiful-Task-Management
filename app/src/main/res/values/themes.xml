@@ -25,4 +25,9 @@
     <style name="add_task_btn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorSecondary">#2864FF</item>
     </style>
+    <style name="calendar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#2864FF</item>
+        <item name="colorSecondary">#2864FF</item>
+        <item name="colorOnSecondary">@color/white</item>
+    </style>
 </resources>

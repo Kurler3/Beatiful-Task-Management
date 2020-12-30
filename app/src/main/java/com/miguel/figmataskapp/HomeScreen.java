@@ -12,7 +12,12 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class HomeScreen extends AppCompatActivity {
+    public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy");
+
     BottomNavigationView mNavigationView;
     FrameLayout mFragContainer;
     @Override
@@ -23,9 +28,14 @@ public class HomeScreen extends AppCompatActivity {
         mNavigationView = findViewById(R.id.bottom_navigation);
         mFragContainer = findViewById(R.id.fragment_container);
 
+        // Temporary
+        Calendar c = Calendar.getInstance();
+        String currentDate = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
+        //------------------
+
         // Set the tasks list as the display when entering into this activity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new MainTasksFragment()).commit();
+                MainTasksFragment.newInstance(currentDate)).commit();
 
         mNavigationView.setOnNavigationItemSelectedListener(navListener);
 
@@ -44,13 +54,17 @@ public class HomeScreen extends AppCompatActivity {
         Fragment selectedFrag = null;
         switch(item.getItemId()){
             case R.id.task_list_down_btn:
-                selectedFrag = new MainTasksFragment();
+                // Temporary
+                Calendar c = Calendar.getInstance();
+                String date = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
+                //-------------------------
+                selectedFrag = MainTasksFragment.newInstance(date);
                 break;
             case R.id.create_task_bottom_btn:
                 //Create Task frag
                 break;
             case R.id.calendar_bottom_btn:
-                //Create calendar frag
+                selectedFrag = new CalendarFragment();
                 break;
         }
 
