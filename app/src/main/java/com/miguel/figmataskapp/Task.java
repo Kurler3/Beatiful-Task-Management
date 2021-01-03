@@ -1,10 +1,13 @@
 package com.miguel.figmataskapp;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "task_table")
-public class Task {
+public class Task implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -25,6 +28,30 @@ public class Task {
         this.hasReminder = hasReminder;
         this.priority = priority;
     }
+
+    protected Task(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        description = in.readString();
+        dateCreation = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
+        priority = in.readInt();
+        hasReminder = in.readByte() != 0;
+    }
+
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
+
     public int getId(){
         return id;
     }
@@ -56,5 +83,23 @@ public class Task {
 
     public boolean isHasReminder() {
         return hasReminder;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeInt(id);
+        parcel.writeString(title);
+        parcel.writeString(description);
+        parcel.writeString(dateCreation);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
+        parcel.writeInt(priority);
+        parcel.writeByte((byte) (hasReminder ? 1 : 0));
     }
 }

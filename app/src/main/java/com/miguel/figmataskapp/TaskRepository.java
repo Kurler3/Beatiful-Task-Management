@@ -10,10 +10,10 @@ import java.util.List;
 
 public class TaskRepository {
     private TaskDao taskDao;
-    private List<Task> taskList;
+    private LiveData<List<Task>> taskList;
 
     public TaskRepository(Application application){
-        TaskDatabase noteDatabase = TaskDatabase.getInstance(application);
+        TaskDatabase noteDatabase = TaskDatabase.getInstance(application.getApplicationContext());
         taskDao = noteDatabase.taskDao();
         taskList = taskDao.getAllTasks();
     }
@@ -26,16 +26,17 @@ public class TaskRepository {
     public void delete(Task note){
         new DeleteAsyncTask(taskDao).execute(note);
     }
-    public List<Task> getTasksAtDate(String date){
-      List<Task> filtered = new ArrayList<>();
+    /*
+    public ArrayList<Task> getTasksAtDate(String date){
+      ArrayList<Task> filtered = new ArrayList<>();
       for(Task task : taskList){
           if(task.getDateCreation().equals(date)){
               filtered.add(task);
           }
       }
       return filtered;
-    }
-    public List<Task> getAllTasks(){
+    }*/
+    public LiveData<List<Task>> getAllTasks(){
         return taskList;
     }
 

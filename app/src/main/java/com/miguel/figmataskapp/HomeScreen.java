@@ -1,5 +1,6 @@
 package com.miguel.figmataskapp;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.MenuItem;
@@ -9,33 +10,56 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class HomeScreen extends AppCompatActivity {
     public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy");
 
+    OnDateTaskListChanged mainTasksFragListener;
+
+    TaskViewModel taskViewModel;
     BottomNavigationView mNavigationView;
     FrameLayout mFragContainer;
+
+    String mDate;
+    ArrayList<Task> mDateTasksList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list_with_bottom_nav);
 
+        // Temporary
+        mDateTasksList = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();
+        mDate = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
+        //------------------
+
+        taskViewModel = new ViewModelProvider(this, new TaskViewModelFactory(this.getApplication()))
+                .get(TaskViewModel.class);
+
+        taskViewModel.getAllTasks().observe(this, tasks -> {
+            mDateTasksList = getTasksAtDate(mDate, tasks);
+            if(mainTasksFragListener!=null){
+                mainTasksFragListener.updateDateTaskList(mDate, mDateTasksList);
+            }
+        });
+
         mNavigationView = findViewById(R.id.bottom_navigation);
         mFragContainer = findViewById(R.id.fragment_container);
 
-        // Temporary
-        Calendar c = Calendar.getInstance();
-        String currentDate = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
-        //------------------
 
         // Set the tasks list as the display when entering into this activity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                MainTasksFragment.newInstance(currentDate)).commit();
+                MainTasksFragment.newInstance(mDate, mDateTasksList)).commit();
 
         mNavigationView.setOnNavigationItemSelectedListener(navListener);
 
@@ -58,7 +82,11 @@ public class HomeScreen extends AppCompatActivity {
                 Calendar c = Calendar.getInstance();
                 String date = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
                 //-------------------------
-                selectedFrag = MainTasksFragment.newInstance(date);
+
+
+                selectedFrag = MainTasksFragment.newInstance(date,mDateTasksList);
+
+                setOnDateTaskListChangedListener((OnDateTaskListChanged) selectedFrag);
                 break;
             case R.id.create_task_bottom_btn:
                 //Create Task frag
@@ -77,5 +105,21 @@ public class HomeScreen extends AppCompatActivity {
                 selectedFrag).commit();
 
         return true;
+    }
+    public ArrayList<Task> getTasksAtDate(String date, List<Task> fullTaskList){
+        ArrayList<Task> filtered = new ArrayList<>();
+        for(Task task : fullTaskList){
+            if(task.getDateCreation().equals(date)){
+                filtered.add(task);
+            }
+        }
+        return filtered;
+    }
+
+    public interface OnDateTaskListChanged{
+        void updateDateTaskList(String date, List<Task> taskList);
+    }
+    public void setOnDateTaskListChangedListener(OnDateTaskListChanged listener){
+        this.mainTasksFragListener = listener;
     }
 }

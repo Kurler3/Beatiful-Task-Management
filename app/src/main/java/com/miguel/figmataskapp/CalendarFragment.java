@@ -31,7 +31,7 @@ public class CalendarFragment extends Fragment {
 
         mConfirmBtn.setOnClickListener(view -> {
             // Somehow send the data chosen back to the tasks list and makes it show the tasks saved for that day.
-            // Should force the fragment show in this frame layout to be changed back to the tasks list.
+            // Should force the fragment shown in this frame layout to be changed back to the tasks list.
         });
 
         return v;

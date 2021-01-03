@@ -4,12 +4,14 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskViewModel extends AndroidViewModel {
         private TaskRepository taskRepository;
-        private List<Task> tasks;
+        private LiveData<List<Task>> tasks;
 
 
     public TaskViewModel(@NonNull Application application) {
@@ -26,10 +28,11 @@ public class TaskViewModel extends AndroidViewModel {
     public void delete(Task task){
         taskRepository.delete(task);
     }
-    public List<Task> getTasksAtDate(String date){
+    /*
+    public ArrayList<Task> getTasksAtDate(String date){
         return taskRepository.getTasksAtDate(date);
-    }
-    public List<Task> getAllTasks(){
+    }*/
+    public LiveData<List<Task>> getAllTasks(){
         return tasks;
     }
 }

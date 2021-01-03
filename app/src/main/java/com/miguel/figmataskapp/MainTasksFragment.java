@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -15,40 +14,40 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainTasksFragment extends Fragment {
+public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTaskListChanged {
     public static final String TAG = "tasksFragment";
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM, yyyy");
 
-
     public static final String MAIN_TASKS_FRAGMENT_PASS_DATE = "passDate";
+    public static final String MAIN_TASKS_FRAG_DATE_TASK_LIST = "passTaskList";
 
-    TaskViewModel taskViewModel;
     TextView mCurrentMonthYear;
     RecyclerView mDaysRecyclerView, mTasksRecyclerView;
     ImageButton mOptionsBtn;
     ImageView mPreviousDayBtn, mNextDayBtn;
     PopupMenu mPopupMenu;
-    List<Task> taskList;
-
+    ArrayList<Task> dateTaskList;
+    String mDate;
     LinearLayoutManager linearLayoutManager;
 
-
-    public static MainTasksFragment newInstance(String date){
+    public static MainTasksFragment newInstance(String date, ArrayList<Task> taskList){
         MainTasksFragment fragment = new MainTasksFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(MAIN_TASKS_FRAGMENT_PASS_DATE, date);
+        bundle.putParcelableArrayList(MAIN_TASKS_FRAG_DATE_TASK_LIST, taskList);
+
 
         fragment.setArguments(bundle);
+
         return fragment;
     }
     @Nullable
@@ -60,13 +59,10 @@ public class MainTasksFragment extends Fragment {
         //Instantiate views
         InstantiateViews(v);
 
-        // Create the TaskViewModel and get the list of tasks to populate the recyclerview
-        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-
         if(getArguments().getString(MAIN_TASKS_FRAGMENT_PASS_DATE)!=null){
             // date will be passed in format dd/mm/yyyy
-            String datePassed = getArguments().getString(MAIN_TASKS_FRAGMENT_PASS_DATE);
-            String[] dateParts = datePassed.split("/");
+            mDate = getArguments().getString(MAIN_TASKS_FRAGMENT_PASS_DATE);
+            String[] dateParts = mDate.split("/");
 
             Calendar c = Calendar.getInstance();
             c.set(Calendar.DAY_OF_MONTH, Integer.valueOf(dateParts[0]));
@@ -77,10 +73,11 @@ public class MainTasksFragment extends Fragment {
             CreateDaysRecyclerView(c);
 
             // Get the Task List
-            taskList = taskViewModel.getTasksAtDate(datePassed);
+            dateTaskList = getArguments().getParcelableArrayList(MAIN_TASKS_FRAG_DATE_TASK_LIST);
 
             Log.d(TAG, "Everything worked well");
         }
+        /*
         else{
             Calendar c = Calendar.getInstance();
             StartTitle(c);
@@ -89,11 +86,10 @@ public class MainTasksFragment extends Fragment {
             String date = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
 
             // Get the Task List
-            taskList = taskViewModel.getTasksAtDate(date);
-        }
+            // taskList = taskViewModel.getTasksAtDate(date);
+        }*/
 
         CreateOptionsDropdownMenu();
-
 
 
         return v;
@@ -157,5 +153,12 @@ public class MainTasksFragment extends Fragment {
             result[i] = df.format(c.getTime());
         }
         return result;
+    }
+    @Override
+    public void updateDateTaskList(String date, List<Task> updatedTasks) {
+        if(mDate.equals(date)){
+            dateTaskList = (ArrayList) updatedTasks;
+            //should update the recycler view as well
+        }
     }
 }
