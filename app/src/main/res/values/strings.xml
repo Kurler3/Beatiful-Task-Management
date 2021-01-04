@@ -14,4 +14,12 @@
     <string name="my_task">My Task</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
+    <string name="snack_bar_undo_delete">Task Deleted</string>
+    <string name="undo_delete">UNDO</string>
+    <string name="new_title">New Title</string>
+    <string name="new_description">New Description</string>
+    <string name="create_new_task">Create new Task</string>
+    <string name="remind_me">Remind me</string>
 </resources>

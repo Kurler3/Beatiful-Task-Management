@@ -14,13 +14,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class HomeScreen extends AppCompatActivity {
+public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter.OnTaskRemovedListener,
+        CreateTaskFragment.OnTaskCreatedListener {
     public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/mm/yyyy");
 
     OnDateTaskListChanged mainTasksFragListener;
@@ -38,9 +40,9 @@ public class HomeScreen extends AppCompatActivity {
 
         // Temporary
         mDateTasksList = new ArrayList<>();
-
+       // mDateTasksList.add(new Task("Title","Description",mDate,"11:22 AM", "12:00 AM", false,1));
         Calendar c = Calendar.getInstance();
-        mDate = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
+        mDate = new SimpleDateFormat("dd/MM/yyyy").format(c.getTime());
         //------------------
 
         taskViewModel = new ViewModelProvider(this, new TaskViewModelFactory(this.getApplication()))
@@ -62,8 +64,6 @@ public class HomeScreen extends AppCompatActivity {
                 MainTasksFragment.newInstance(mDate, mDateTasksList)).commit();
 
         mNavigationView.setOnNavigationItemSelectedListener(navListener);
-
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -85,22 +85,16 @@ public class HomeScreen extends AppCompatActivity {
 
 
                 selectedFrag = MainTasksFragment.newInstance(date,mDateTasksList);
-
                 setOnDateTaskListChangedListener((OnDateTaskListChanged) selectedFrag);
                 break;
             case R.id.create_task_bottom_btn:
                 //Create Task frag
+                selectedFrag = new CreateTaskFragment();
                 break;
             case R.id.calendar_bottom_btn:
                 selectedFrag = new CalendarFragment();
                 break;
         }
-
-
-        //For debugging
-        if(selectedFrag==null) return true;
-        //---------------------
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFrag).commit();
 
@@ -114,6 +108,24 @@ public class HomeScreen extends AppCompatActivity {
             }
         }
         return filtered;
+    }
+
+    @Override
+    public void removeTask(Task removedTask) {
+        taskViewModel.delete(removedTask);
+
+        //Show a Snackbar asking if want to undo, if want to undo
+        Snackbar snackbar = Snackbar.make(getCurrentFocus(), R.string.snack_bar_undo_delete, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo_delete, view -> {
+            //If the user clicks on the undo button then insert the note back into database
+            taskViewModel.insert(removedTask);
+        });
+        snackbar.show();
+    }
+
+    @Override
+    public void insertNewTask(Task task) {
+        taskViewModel.insert(task);
     }
 
     public interface OnDateTaskListChanged{
