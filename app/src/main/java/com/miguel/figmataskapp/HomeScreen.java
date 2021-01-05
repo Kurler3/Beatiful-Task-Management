@@ -83,7 +83,6 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
                 String date = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
                 //-------------------------
 
-
                 selectedFrag = MainTasksFragment.newInstance(date,mDateTasksList);
                 setOnDateTaskListChangedListener((OnDateTaskListChanged) selectedFrag);
                 break;
