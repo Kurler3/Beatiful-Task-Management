@@ -18,7 +18,7 @@
 
     <View
         android:id="@+id/view4"
-        android:layout_width="183dp"
+        android:layout_width="200dp"
         android:layout_height="40dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/skip_btn"
@@ -94,7 +94,7 @@
 
     <RelativeLayout
         android:id="@+id/date_btn"
-        android:layout_width="183dp"
+        android:layout_width="200dp"
         android:layout_height="40dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/skip_btn"
@@ -119,7 +119,7 @@
             android:fontFamily="@font/lobster"
             android:text="01, January, 2021"
             android:textColor="#ffff"
-            android:textSize="11sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -130,47 +130,49 @@
             android:fontFamily="@font/lobster"
             android:text="Date"
             android:textColor="#007ABF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/start_time_btn"
-        android:layout_width="85dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="112dp"
+        android:layout_width="95dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="104dp"
+        android:background="@drawable/start_time_btn"
         app:layout_constraintBottom_toTopOf="@+id/view4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_btn"
-        app:layout_constraintVertical_bias="0.518"
-        android:background="@drawable/start_time_btn"
-        >
+        app:layout_constraintVertical_bias="0.518">
+
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/clock"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="8dp"
+            app:srcCompat="@drawable/clock" />
+
         <TextView
             android:id="@+id/create_task_start_time_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3:00 PM"
-            android:textSize="9sp"
-            android:textColor="#ffff"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
             android:fontFamily="@font/lobster"
-            android:layout_marginTop="2dp"/>
+            android:text="3:00 PM"
+            android:textColor="#ffff"
+            android:textSize="11sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Task Start"
-            android:textSize="7sp"
-            android:textColor="#007ABF"
-            android:fontFamily="@font/lobster"
             android:layout_below="@id/create_task_start_time_text"
+            android:layout_marginLeft="4dp"
             android:layout_toRightOf="@id/imageView3"
-            android:layout_marginLeft="4dp"/>
+            android:fontFamily="@font/lobster"
+            android:text="Task Start"
+            android:textColor="#007ABF"
+            android:textSize="9sp" />
 
     </RelativeLayout>
 
@@ -224,14 +226,13 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
-        android:background="#9DC4FF"
+        android:background="@drawable/input_layouts"
         android:hint="@string/new_title"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.409"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2">
-
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -243,7 +244,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#9DC4FF"
+        android:background="@drawable/input_layouts"
         android:hint="@string/new_description"
         app:endIconMode="clear_text"
         app:layout_constraintBottom_toTopOf="@+id/view2"
@@ -261,8 +262,8 @@
 
     <RelativeLayout
         android:id="@+id/end_time_btn"
-        android:layout_width="85dp"
-        android:layout_height="25dp"
+        android:layout_width="95dp"
+        android:layout_height="30dp"
         app:layout_constraintBottom_toTopOf="@+id/view4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.116"
@@ -284,7 +285,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4:00 PM"
-            android:textSize="9sp"
+            android:textSize="11sp"
             android:textColor="#ffff"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/lobster"
@@ -293,7 +294,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Task End"
-            android:textSize="7sp"
+            android:textSize="9sp"
             android:textColor="#007ABF"
             android:fontFamily="@font/lobster"
             android:layout_below="@id/create_task_end_time_text"

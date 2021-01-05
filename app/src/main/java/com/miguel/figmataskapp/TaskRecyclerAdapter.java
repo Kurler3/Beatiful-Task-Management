@@ -23,6 +23,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         this.mContext = mContext;
         this.mTaskArray = tasks;
         this.mTaskRemovedListener = listener;
+        this.mTaskArray = new ArrayList<>();
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder{

@@ -16,17 +16,15 @@ public class Task implements Parcelable {
     private String dateCreation;
     private String startTime;
     private String endTime;
-    private int priority;
     private boolean hasReminder;
 
-    public Task(String title, String description, String dateCreation, String startTime, String endTime, boolean hasReminder, int priority) {
+    public Task(String title, String description, String dateCreation, String startTime, String endTime, boolean hasReminder) {
         this.title = title;
         this.description = description;
         this.dateCreation = dateCreation;
         this.startTime = startTime;
         this.endTime = endTime;
         this.hasReminder = hasReminder;
-        this.priority = priority;
     }
 
     protected Task(Parcel in) {
@@ -36,7 +34,6 @@ public class Task implements Parcelable {
         dateCreation = in.readString();
         startTime = in.readString();
         endTime = in.readString();
-        priority = in.readInt();
         hasReminder = in.readByte() != 0;
     }
 
@@ -57,9 +54,6 @@ public class Task implements Parcelable {
     }
     public void setId(int id) {
         this.id = id;
-    }
-    public int getPriority(){
-        return priority;
     }
     public String getTitle() {
         return title;
@@ -99,7 +93,6 @@ public class Task implements Parcelable {
         parcel.writeString(dateCreation);
         parcel.writeString(startTime);
         parcel.writeString(endTime);
-        parcel.writeInt(priority);
         parcel.writeByte((byte) (hasReminder ? 1 : 0));
     }
 }

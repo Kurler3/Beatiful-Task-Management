@@ -62,7 +62,6 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tasks_list_fragment, container, false);
 
-
         //Instantiate views
         InstantiateViews(v);
 
@@ -71,24 +70,6 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
 
         // Create the options menu
         CreateOptionsDropdownMenu();
-
-
-
-        //if(getArguments().getString(MAIN_TASKS_FRAGMENT_PASS_DATE)!=null ){
-            // date will be passed in format dd/mm/yyyy
-
-        //}
-        /*
-        else{
-            Calendar c = Calendar.getInstance();
-            StartTitle(c);
-            CreateDaysRecyclerView(c);
-
-            String date = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
-
-            // Get the Task List
-            // taskList = taskViewModel.getTasksAtDate(date);
-        }*/
 
         return v;
     }

@@ -1,11 +1,13 @@
 package com.miguel.figmataskapp;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,13 +22,14 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Date;
 
 public class CreateTaskFragment extends Fragment {
     public static final String DATE_PICKER = "datePicker";
     private static final SimpleDateFormat dateTextFormat = new SimpleDateFormat("dd, MMMM, yyyy");
     private static final SimpleDateFormat timeIntervalTextFormat = new SimpleDateFormat("kk:mm");
 
+    OnTaskCreatedListener mOnTaskCreatedListener;
 
     RelativeLayout mStartTimeLayout, mEndTimeLayout, mDatePickLayout;
     SwitchMaterial mReminderSwitch;
@@ -34,16 +37,25 @@ public class CreateTaskFragment extends Fragment {
     TextView mDateText, mStartTimeText, mEndTimeText;
     TextInputLayout mTitleInput, mDescriptionInput;
     Calendar currentCalendar;
-    Boolean mTaskHasReminder;
+    boolean mTaskHasReminder;
+    boolean timeChanged;
 
     int startHourSelected, startMinutesSelected;
     int endHourSelected, endMinutesSelected;
+
+    String mSelectedDate;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.create_task_layout, container, false);
 
+        // Sets the listener for when adding a new task
+        setOnTaskCreatedListener((OnTaskCreatedListener) getContext());
+
         currentCalendar = Calendar.getInstance();
+
+        mSelectedDate = new SimpleDateFormat("dd/MM/yyyy").format(currentCalendar.getTime());
 
         InstantiateViews(v);
 
@@ -53,6 +65,23 @@ public class CreateTaskFragment extends Fragment {
         HandleDatePicker();
 
         HandleTimePicker();
+
+        mCreateTaskBtn.setOnClickListener(view -> {
+            // Check if the task can be created, otherwise notice the user that the data input is invalid
+            if(CheckDataInputted()){
+                Task createdTask = CreateTask();
+
+                mOnTaskCreatedListener.insertNewTask(createdTask);
+            }else{
+                Toast.makeText(getContext(), "A task can't be created with the information provided", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mReminderSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(compoundButton.isChecked()) mTaskHasReminder = true;
+            else mTaskHasReminder = false;
+        });
+
         return v;
     }
     private void InstantiateViews(View v){
@@ -80,8 +109,25 @@ public class CreateTaskFragment extends Fragment {
 
         mEndTimeText.setText(timeIntervalTextFormat.format(currentCalendar.getTime()));
     }
+    private boolean CheckDataInputted(){
+        if(!mTitleInput.getEditText().getText().toString().isEmpty() && !mDescriptionInput.getEditText().getText().toString().isEmpty()){
+            return true;
+        }
+        return false;
+    }
+    private Task CreateTask(){
+        String title = mTitleInput.getEditText().getText().toString();
+        String description = mDescriptionInput.getEditText().getText().toString();
+        String dateCreation = mSelectedDate;
+        String startTime = mStartTimeText.getText().toString();
+        String endTime = mEndTimeText.getText().toString();
+        boolean hasReminder = mTaskHasReminder;
+
+        return new Task(title,description,dateCreation,startTime,endTime,hasReminder);
+    }
+
     private void HandleDatePicker(){
-        MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Choose a Date").build();
 
         mDatePickLayout.setOnClickListener(view -> {
@@ -89,23 +135,20 @@ public class CreateTaskFragment extends Fragment {
         });
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            String dateSelected = datePicker.getHeaderText();
-            String[] parts = dateSelected.split(" ");
-            Calendar selectedCalendar = Calendar.getInstance();
-            selectedCalendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(parts[0]));
-            selectedCalendar.set(Calendar.MONTH, Integer.valueOf(parts[1])+1);
-            selectedCalendar.set(Calendar.YEAR, Integer.valueOf(parts[2]));
 
+            Date selectedDate = new Date(selection);
+
+            mSelectedDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date(selection));
             // Checks if the date selected is before the current Date
-            if(CheckDateSelected(selectedCalendar)){
-                mDateText.setText(dateTextFormat.format(selectedCalendar.getTime()));
+            if(CheckDateSelected(selectedDate)){
+                mDateText.setText(dateTextFormat.format(selectedDate));
             }
         });
     }
-    private boolean CheckDateSelected(Calendar selectedCalendar){
+    private boolean CheckDateSelected(Date selectedDate){
         currentCalendar = Calendar.getInstance();
 
-        if(currentCalendar.getTime().after(selectedCalendar.getTime())){
+        if(currentCalendar.getTime().after(selectedDate)){
             return false;
         }
         return true;
@@ -139,19 +182,19 @@ public class CreateTaskFragment extends Fragment {
                     selectedTime.set(Calendar.HOUR_OF_DAY, i);
                     selectedTime.set(Calendar.MINUTE, i1);
 
-                    if(CheckTimeSelected(isStartTime, selectedTime)){
-                        mStartTimeText.setText(timeIntervalTextFormat.format(selectedTime.getTime()));
-                    }
+                    // Checks if the time input is correct and sets the text for the specific TextView
+                    timeChanged = CheckTimeSelectedAndSetText(isStartTime, selectedTime);
                 },
                 Integer.valueOf(parts[0]),
                 Integer.valueOf(parts[1]),
                 false);
-        if(isStartTime) timePicker.updateTime(startHourSelected, startMinutesSelected);
-        else timePicker.updateTime(endHourSelected, endMinutesSelected);
-
+        if(timeChanged){
+            if(isStartTime) timePicker.updateTime(startHourSelected, startMinutesSelected);
+            else timePicker.updateTime(endHourSelected, endMinutesSelected);
+        }
         return timePicker;
     }
-    private boolean CheckTimeSelected(boolean isStartTime, Calendar selectedTime){
+    private boolean CheckTimeSelectedAndSetText(boolean isStartTime, Calendar selectedTime){
         if(isStartTime){
             String[] endTime = mEndTimeText.getText().toString().split(":");
             Calendar endTimeCalendar = Calendar.getInstance();
@@ -162,6 +205,8 @@ public class CreateTaskFragment extends Fragment {
             if(selectedTime.getTime().after(endTimeCalendar.getTime())){
                 Toast.makeText(getContext(), "Start time needs to be before end time", Toast.LENGTH_SHORT).show();
                 return false;
+            }else{
+                mStartTimeText.setText(timeIntervalTextFormat.format(selectedTime.getTime()));
             }
         }else{
             String[] startTime = mStartTimeText.getText().toString().split(":");
@@ -173,11 +218,16 @@ public class CreateTaskFragment extends Fragment {
             if(selectedTime.getTime().before(startTimeCalendar.getTime())){
                 Toast.makeText(getContext(), "End time needs to be after start time", Toast.LENGTH_SHORT).show();
                 return false;
+            }else{
+                mEndTimeText.setText(timeIntervalTextFormat.format(selectedTime.getTime()));
             }
         }
         return true;
     }
     public interface OnTaskCreatedListener{
         void insertNewTask(Task task);
+    }
+    public void setOnTaskCreatedListener(OnTaskCreatedListener listener){
+        this.mOnTaskCreatedListener = listener;
     }
 }

@@ -48,20 +48,22 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
         taskViewModel = new ViewModelProvider(this, new TaskViewModelFactory(this.getApplication()))
                 .get(TaskViewModel.class);
 
+        mNavigationView = findViewById(R.id.bottom_navigation);
+        mFragContainer = findViewById(R.id.fragment_container);
+
+        // Set the tasks list as the display when entering into this activity
+        Fragment frag = MainTasksFragment.newInstance(mDate, mDateTasksList);
+        setOnDateTaskListChangedListener((OnDateTaskListChanged) frag);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                frag).commit();
+        //----------------------------------------------------------------------
+
         taskViewModel.getAllTasks().observe(this, tasks -> {
             mDateTasksList = getTasksAtDate(mDate, tasks);
             if(mainTasksFragListener!=null){
                 mainTasksFragListener.updateDateTaskList(mDate, mDateTasksList);
             }
         });
-
-        mNavigationView = findViewById(R.id.bottom_navigation);
-        mFragContainer = findViewById(R.id.fragment_container);
-
-
-        // Set the tasks list as the display when entering into this activity
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                MainTasksFragment.newInstance(mDate, mDateTasksList)).commit();
 
         mNavigationView.setOnNavigationItemSelectedListener(navListener);
     }
@@ -80,15 +82,16 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
             case R.id.task_list_down_btn:
                 // Temporary
                 Calendar c = Calendar.getInstance();
-                String date = new SimpleDateFormat("dd/mm/yyyy").format(c.getTime());
+                String date = new SimpleDateFormat("dd/MM/yyyy").format(c.getTime());
                 //-------------------------
 
                 selectedFrag = MainTasksFragment.newInstance(date,mDateTasksList);
-                setOnDateTaskListChangedListener((OnDateTaskListChanged) selectedFrag);
+                if(mainTasksFragListener==null) setOnDateTaskListChangedListener((OnDateTaskListChanged) selectedFrag);
                 break;
             case R.id.create_task_bottom_btn:
                 //Create Task frag
                 selectedFrag = new CreateTaskFragment();
+
                 break;
             case R.id.calendar_bottom_btn:
                 selectedFrag = new CalendarFragment();
@@ -124,7 +127,11 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
 
     @Override
     public void insertNewTask(Task task) {
+        // Inserts the task
         taskViewModel.insert(task);
+
+
+        Snackbar.make(getCurrentFocus(),"Task added", Snackbar.LENGTH_SHORT).show();
     }
 
     public interface OnDateTaskListChanged{
