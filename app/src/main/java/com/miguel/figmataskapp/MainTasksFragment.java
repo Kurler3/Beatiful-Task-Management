@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -19,16 +18,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTaskListChanged{
+public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTaskFragTaskChangedListener {
     public static final String TAG = "tasksFragment";
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM, yyyy");
 
@@ -45,6 +40,8 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
     LinearLayoutManager linearLayoutManager;
     TaskRecyclerAdapter mTaskAdapter;
 
+    OnTaskRemovedListener mTaskRemovedListener;
+
     public static MainTasksFragment newInstance(String date, ArrayList<Task> taskList){
         MainTasksFragment fragment = new MainTasksFragment();
 
@@ -57,10 +54,12 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
 
         return fragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tasks_list_fragment, container, false);
+
 
         //Instantiate views
         InstantiateViews(v);
@@ -70,6 +69,22 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
 
         // Create the options menu
         CreateOptionsDropdownMenu();
+
+        // Going to remove tasks on swipe
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Task taskSwiped = mTaskAdapter.getTaskAt(viewHolder.getAdapterPosition());
+                // Communicate with the homescreen and tell it to remove this task
+                //mTaskRemovedListener.deleteTask(taskSwiped);
+                mTaskAdapter.getTaskRemovedListener().removeTask(taskSwiped);
+            }
+        }).attachToRecyclerView(mTasksRecyclerView);
 
         return v;
     }
@@ -86,9 +101,10 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
         StartTitle(c);
         CreateDaysRecyclerView(c);
 
+
         // Get the Task List
         dateTaskList = getArguments().getParcelableArrayList(MAIN_TASKS_FRAG_DATE_TASK_LIST);
-        // Should pass the task list to the adapter
+
         CreateTaskRecyclerView(dateTaskList);
 
         Log.d(TAG, "Everything worked well");
@@ -161,7 +177,10 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
         if(mDate.equals(date)){
             dateTaskList = (ArrayList) updatedTasks;
             //should update the recycler view as well
-            if(mTaskAdapter!=null) mTaskAdapter.setTaskArray((ArrayList<Task>) updatedTasks);
+            if(mTaskAdapter!=null){
+                mTaskAdapter.setTaskArray((ArrayList<Task>) updatedTasks);
+                mTaskAdapter.notifyDataSetChanged();
+            }
         }
     }
     private void CreateTaskRecyclerView(ArrayList<Task> tasks){
@@ -171,6 +190,25 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnDateTask
 
         mTasksRecyclerView.setLayoutManager(llm);
         mTasksRecyclerView.setAdapter(mTaskAdapter);
+    }
+    public void setDate(String newDate){
+        this.mDate = newDate;
+    }
+    public void setTasks(ArrayList tasks){
+        this.dateTaskList = tasks;
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mTasksRecyclerView.setAdapter(null);
+        mTaskAdapter = null;
+        mTasksRecyclerView = null;
+    }
+    public interface OnTaskRemovedListener{
+        void deleteTask(Task task);
+    }
+    public void setOnTaskRemovedListener(OnTaskRemovedListener listener){
+        this.mTaskRemovedListener = listener;
     }
 
 }

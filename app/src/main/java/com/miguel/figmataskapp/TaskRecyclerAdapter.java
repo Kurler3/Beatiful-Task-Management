@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
     public class TaskViewHolder extends RecyclerView.ViewHolder{
         TextView taskItemTitle, taskItemTime;
-        ImageView taskItemOptions;
+        ImageButton taskItemOptions;
         PopupMenu mPopUpMenu;
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,7 +91,13 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
         this.mTaskArray = taskArray;
     }
 
+    public Task getTaskAt(int position){
+        return mTaskArray.get(position);
+    }
     public interface OnTaskRemovedListener{
         void removeTask(Task task);
+    }
+    public OnTaskRemovedListener getTaskRemovedListener(){
+        return mTaskRemovedListener;
     }
 }
