@@ -7,9 +7,10 @@
     android:layout_marginLeft="8dp">
 
     <RelativeLayout
+        android:id="@+id/day_item_layout"
         android:layout_width="54dp"
         android:layout_height="77dp"
-        android:background="@drawable/day_item">
+        android:background="@drawable/day_item_layout_selector">
 
         <TextView
             android:id="@+id/day_item_number"

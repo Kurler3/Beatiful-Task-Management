@@ -16,14 +16,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTaskFragTaskChangedListener {
+public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTaskFragTaskChangedListener{
     public static final String TAG = "tasksFragment";
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM, yyyy");
 
@@ -39,8 +41,6 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
     String mDate;
     LinearLayoutManager linearLayoutManager;
     TaskRecyclerAdapter mTaskAdapter;
-
-    OnTaskRemovedListener mTaskRemovedListener;
 
     public static MainTasksFragment newInstance(String date, ArrayList<Task> taskList){
         MainTasksFragment fragment = new MainTasksFragment();
@@ -82,7 +82,9 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
                 Task taskSwiped = mTaskAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 // Communicate with the homescreen and tell it to remove this task
                 //mTaskRemovedListener.deleteTask(taskSwiped);
-                mTaskAdapter.getTaskRemovedListener().removeTask(taskSwiped);
+                if(mTaskAdapter.getTaskRemovedListener()!=null){
+                    mTaskAdapter.getTaskRemovedListener().removeTask(taskSwiped);
+                }
             }
         }).attachToRecyclerView(mTasksRecyclerView);
 
@@ -147,12 +149,25 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
     }
 
     private void CreateDaysRecyclerView(Calendar c){
+        int position = c.get(Calendar.DAY_OF_MONTH)-1;
         // Create HashMap with the current month's days
-        DaysRecyclerAdapter adapter = new DaysRecyclerAdapter(getContext(), CreateDayList(c));
+        DaysRecyclerAdapter adapter = new DaysRecyclerAdapter((DaysRecyclerAdapter.OnDayItemSelectedListener) getActivity(), CreateDayList(c),
+                position);
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         mDaysRecyclerView.setAdapter(adapter);
         mDaysRecyclerView.setLayoutManager(linearLayoutManager);
+
+        // Recycler view will scroll smoothly to the selected day
+        RecyclerView.SmoothScroller smoothScroller = new
+                LinearSmoothScroller(getContext()) {
+                    @Override protected int getVerticalSnapPreference() {
+                        return LinearSmoothScroller.SNAP_TO_START;
+                    }
+                };
+        smoothScroller.setTargetPosition(position);
+
+        mDaysRecyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
     }
     private String[] CreateDayList(Calendar c){
         SimpleDateFormat df = new SimpleDateFormat("EE");
@@ -184,7 +199,7 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         }
     }
     private void CreateTaskRecyclerView(ArrayList<Task> tasks){
-        mTaskAdapter = new TaskRecyclerAdapter((TaskRecyclerAdapter.OnTaskRemovedListener) getActivity().getParent(), getContext(), tasks);
+        mTaskAdapter = new TaskRecyclerAdapter((TaskRecyclerAdapter.OnTaskRemovedListener) getActivity(), getContext(), tasks);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
 
@@ -204,11 +219,17 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         mTaskAdapter = null;
         mTasksRecyclerView = null;
     }
-    public interface OnTaskRemovedListener{
-        void deleteTask(Task task);
-    }
-    public void setOnTaskRemovedListener(OnTaskRemovedListener listener){
-        this.mTaskRemovedListener = listener;
-    }
 
+    public void updateFrag(Calendar date, ArrayList<Task> tasks){
+        this.mDate = HomeScreen.DATE_FORMAT.format(date.getTime());
+        this.dateTaskList = tasks;
+
+        //Change adapters
+       // mTasksRecyclerView.setAdapter(null);
+        //mDaysRecyclerView.setAdapter(null);
+
+        CreateDaysRecyclerView(date);
+        CreateTaskRecyclerView(tasks);
+
+    }
 }

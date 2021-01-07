@@ -3,6 +3,7 @@ package com.miguel.figmataskapp;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter.OnTaskRemovedListener,
-        CreateTaskFragment.OnTaskCreatedListener{
+        CreateTaskFragment.OnTaskCreatedListener, DaysRecyclerAdapter.OnDayItemSelectedListener {
     public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     public static final String MAIN_TASKS_FRAG_MANAGER = "mainTasksFrag";
     public static final String CREATE_TASKS_FRAG_MANAGER = "createTasksFrag";
@@ -28,6 +29,7 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
 
     OnMainTaskFragTaskChangedListener mainTasksFragListener;
 
+    RelativeLayout mHomeScreenView;
     TaskViewModel taskViewModel;
     BottomNavigationView mNavigationView;
     FrameLayout mFragContainer;
@@ -37,7 +39,7 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
     ArrayList<Task> mDateTasksList = new ArrayList<>();
 
     // Countering the re-creation of fragments when the UI in the FrameLayout is changed
-    final MainTasksFragment mMainTasksFrag = MainTasksFragment.newInstance(mDate, mDateTasksList);
+    MainTasksFragment mMainTasksFrag = MainTasksFragment.newInstance(mDate, mDateTasksList);
     final CreateTaskFragment mCreateTaskFrag = new CreateTaskFragment();
     final CalendarFragment mCalendarFrag = new CalendarFragment();
     final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -67,6 +69,7 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
 
         mNavigationView = findViewById(R.id.bottom_navigation);
         mFragContainer = findViewById(R.id.fragment_container);
+        mHomeScreenView = findViewById(R.id.home_screen_layout);
 
         // Set the listener to the MainTasksFragment
         setOnDateTaskListChangedListener((OnMainTaskFragTaskChangedListener) mMainTasksFrag);
@@ -129,7 +132,7 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
         taskViewModel.delete(removedTask);
 
         //Show a Snackbar asking if want to undo, if want to undo
-        Snackbar snackbar = Snackbar.make(getCurrentFocus(), R.string.snack_bar_undo_delete, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(mHomeScreenView, R.string.snack_bar_undo_delete, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo_delete, view -> {
             //If the user clicks on the undo button then insert the note back into database
             taskViewModel.insert(removedTask);
@@ -145,19 +148,16 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
 
         Snackbar.make(getCurrentFocus(),"Task added", Snackbar.LENGTH_SHORT).show();
     }
-    /*
-    @Override
-    public void deleteTask(Task task) {
-        taskViewModel.delete(task);
 
-        //Show a Snackbar asking if want to undo, if want to undo
-        Snackbar snackbar = Snackbar.make(getCurrentFocus(), R.string.snack_bar_undo_delete, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.undo_delete, view -> {
-            //If the user clicks on the undo button then insert the note back into database
-            taskViewModel.insert(task);
-        });
-        snackbar.show();
-    }*/
+    @Override
+    public void changeDay(int dayMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.DAY_OF_MONTH, dayMonth+1);
+
+        mDate = DATE_FORMAT.format(c.getTime());
+        mDateTasksList = new ArrayList<>();
+        mMainTasksFrag.updateFrag(c, mDateTasksList);
+    }
 
     public interface OnMainTaskFragTaskChangedListener {
         void updateDateTaskList(String date, List<Task> taskList);
