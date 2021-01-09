@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -32,6 +33,7 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
     public static final String MAIN_TASKS_FRAGMENT_PASS_DATE = "passDate";
     public static final String MAIN_TASKS_FRAG_DATE_TASK_LIST = "passTaskList";
 
+    Button mTodayBtn;
     TextView mCurrentMonthYear;
     RecyclerView mDaysRecyclerView, mTasksRecyclerView;
     ImageButton mOptionsBtn;
@@ -39,8 +41,10 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
     PopupMenu mPopupMenu;
     ArrayList<Task> dateTaskList;
     String mDate;
+    String mTodayDate;
     LinearLayoutManager linearLayoutManager;
     TaskRecyclerAdapter mTaskAdapter;
+    DaysRecyclerAdapter mDaysAdapter;
 
     public static MainTasksFragment newInstance(String date, ArrayList<Task> taskList){
         MainTasksFragment fragment = new MainTasksFragment();
@@ -88,10 +92,46 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
             }
         }).attachToRecyclerView(mTasksRecyclerView);
 
+        // Clicking on the today button will update the adapters and UI
+        mTodayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTodayBtnClicked();
+            }
+        });
+        // Arrows for changing in between days without having to click on the items of the days recycler view
+        mPreviousDayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        mNextDayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return v;
+    }
+    private void onTodayBtnClicked(){
+        ArrayList<Task> todayTaskList = HomeScreen.getTasksAtDate(mTodayDate, HomeScreen.mFullTasksList);
+        updateOnCalendarDateChanged(getCalendarFromDate(mTodayDate), todayTaskList);
+    }
+    private Calendar getCalendarFromDate(String date){
+        String[] parts = date.split("/");
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.DAY_OF_MONTH, Integer.valueOf(parts[0]));
+        c.set(Calendar.MONTH, Integer.valueOf(parts[1])-1);
+        c.set(Calendar.YEAR, Integer.valueOf(parts[2]));
+
+        return c;
     }
     private void InitializeFrag(){
         mDate = getArguments().getString(MAIN_TASKS_FRAGMENT_PASS_DATE);
+        mTodayDate = mDate;
         String[] dateParts = mDate.split("/");
 
         Calendar c = Calendar.getInstance();
@@ -119,6 +159,7 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         mOptionsBtn = v.findViewById(R.id.options_image_btn);
         mPreviousDayBtn = v.findViewById(R.id.previous_day_btn);
         mNextDayBtn = v.findViewById(R.id.next_day_btn);
+        mTodayBtn = v.findViewById(R.id.today_btn);
 
         // Experimenting
         mPopupMenu = new PopupMenu(getContext(), mOptionsBtn);
@@ -151,11 +192,11 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
     private void CreateDaysRecyclerView(Calendar c){
         int position = c.get(Calendar.DAY_OF_MONTH)-1;
         // Create HashMap with the current month's days
-        DaysRecyclerAdapter adapter = new DaysRecyclerAdapter((DaysRecyclerAdapter.OnDayItemSelectedListener) getActivity(), CreateDayList(c),
+        mDaysAdapter = new DaysRecyclerAdapter((DaysRecyclerAdapter.OnDayItemSelectedListener) getActivity(), CreateDayList(c),
                 position);
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        mDaysRecyclerView.setAdapter(adapter);
+        mDaysRecyclerView.setAdapter(mDaysAdapter);
         mDaysRecyclerView.setLayoutManager(linearLayoutManager);
 
         // Recycler view will scroll smoothly to the selected day
@@ -206,12 +247,8 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         mTasksRecyclerView.setLayoutManager(llm);
         mTasksRecyclerView.setAdapter(mTaskAdapter);
     }
-    public void setDate(String newDate){
-        this.mDate = newDate;
-    }
-    public void setTasks(ArrayList tasks){
-        this.dateTaskList = tasks;
-    }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -224,12 +261,23 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         this.mDate = HomeScreen.DATE_FORMAT.format(date.getTime());
         this.dateTaskList = tasks;
 
-        //Change adapters
-       // mTasksRecyclerView.setAdapter(null);
-        //mDaysRecyclerView.setAdapter(null);
+        mDaysAdapter.updateAdapter(date.get(Calendar.DAY_OF_MONTH)-1, CreateDayList(date));
 
-        CreateDaysRecyclerView(date);
-        CreateTaskRecyclerView(tasks);
+        mTaskAdapter.setTaskArray(tasks);
+        mTaskAdapter.notifyDataSetChanged();
+    }
+    public void updateOnCalendarDateChanged(Calendar date, ArrayList<Task> tasks){
+        this.mDate = HomeScreen.DATE_FORMAT.format(date.getTime());
+        this.dateTaskList = tasks;
+
+        // Change the title
+        StartTitle(date);
+
+        mDaysAdapter.updateAdapter(date.get(Calendar.DAY_OF_MONTH)-1, CreateDayList(date));
+        mDaysAdapter.notifyDataSetChanged();
+
+        mTaskAdapter.setTaskArray(tasks);
+        mTaskAdapter.notifyDataSetChanged();
 
     }
 }

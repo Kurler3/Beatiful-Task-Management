@@ -88,7 +88,8 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
     }
 
     public void setTaskArray(ArrayList<Task> taskArray){
-        this.mTaskArray = taskArray;
+        this.mTaskArray = new ArrayList<>(taskArray);
+
     }
 
     public Task getTaskAt(int position){

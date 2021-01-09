@@ -62,7 +62,6 @@ public class DaysRecyclerAdapter extends RecyclerView.Adapter<DaysRecyclerAdapte
         holder.itemView.setSelected(mDaySelected==position);
     }
 
-
     @Override
     public int getItemCount() {
         return mDaysMap.length;
@@ -71,5 +70,11 @@ public class DaysRecyclerAdapter extends RecyclerView.Adapter<DaysRecyclerAdapte
     public interface OnDayItemSelectedListener{
         void changeDay(int dayMonth);
     }
-
+    public void updateDaySelected(int newSelected){
+        this.mDaySelected = newSelected;
+    }
+    public void updateAdapter(int daySelected, String[] daysList){
+        this.mDaySelected = daySelected;
+        this.mDaysMap = daysList.clone();
+    }
 }
