@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,33 +92,50 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         }).attachToRecyclerView(mTasksRecyclerView);
 
         // Clicking on the today button will update the adapters and UI
-        mTodayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onTodayBtnClicked();
-            }
-        });
+        mTodayBtn.setOnClickListener(v1 -> onTodayBtnClicked());
+
         // Arrows for changing in between days without having to click on the items of the days recycler view
         mPreviousDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onArrowsClicked(true);
             }
         });
         mNextDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onArrowsClicked(false);
             }
         });
 
         return v;
     }
+    private void onArrowsClicked(boolean leftArrow){
+        String[] parts = mDate.split("/");
+        Calendar current = getCalendarFromDate(mDate);
+        if(leftArrow){
+            if(Integer.valueOf(parts[0])>1){
+                current.set(Calendar.DAY_OF_MONTH, Integer.valueOf(parts[0])-1);
+                mDate = HomeScreen.DATE_FORMAT.format(current.getTime());
+
+                ArrayList<Task> todayTaskList = HomeScreen.getTasksAtDate(mDate, HomeScreen.mFullTasksList);
+                updateOnCalendarDateChanged(current, todayTaskList);
+            }
+        }else{
+            if(Integer.valueOf(parts[0])<current.getActualMaximum(Calendar.DAY_OF_MONTH)){
+                current.set(Calendar.DAY_OF_MONTH, Integer.valueOf(parts[0])+1);
+                mDate = HomeScreen.DATE_FORMAT.format(current.getTime());
+
+                ArrayList<Task> todayTaskList = HomeScreen.getTasksAtDate(mDate, HomeScreen.mFullTasksList);
+                updateOnCalendarDateChanged(current, todayTaskList);
+            }
+        }
+    }
     private void onTodayBtnClicked(){
         ArrayList<Task> todayTaskList = HomeScreen.getTasksAtDate(mTodayDate, HomeScreen.mFullTasksList);
         updateOnCalendarDateChanged(getCalendarFromDate(mTodayDate), todayTaskList);
     }
-    private Calendar getCalendarFromDate(String date){
+    public static Calendar getCalendarFromDate(String date){
         String[] parts = date.split("/");
 
         Calendar c = Calendar.getInstance();
@@ -240,7 +256,7 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         }
     }
     private void CreateTaskRecyclerView(ArrayList<Task> tasks){
-        mTaskAdapter = new TaskRecyclerAdapter((TaskRecyclerAdapter.OnTaskRemovedListener) getActivity(), getContext(), tasks);
+        mTaskAdapter = new TaskRecyclerAdapter((TaskRecyclerAdapter.OnTaskAdapterListener) getActivity(), getContext(), tasks);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
 

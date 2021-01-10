@@ -19,7 +19,7 @@
         android:id="@+id/button2"
         android:layout_width="117dp"
         android:layout_height="42dp"
-        android:layout_marginTop="164dp"
+        android:layout_marginTop="128dp"
         android:background="@drawable/skip_btn"
         android:clickable="false"
         android:elevation="4dp"
@@ -53,10 +53,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/task_edit_title_input" />
 
     <ImageButton
-        android:id="@+id/back_arrow_btn_task_activity"
+        android:id="@+id/back_arrow_btn_edit_task_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -68,56 +68,48 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back_arrow" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="352dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/task_edit_title_input"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        android:layout_marginTop="22dp"
+        android:background="#9DC4FF"
+        android:hint="@string/new_title"
+        app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintHorizontal_bias="0.409"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view3"
-        app:layout_constraintVertical_bias="0.498">
+        app:layout_constraintTop_toBottomOf="@+id/button2">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/task_activity_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/lobster"
-            android:padding="8dp"
-            android:text="Example title"
-            android:textColor="#ffff"
-            android:textSize="17sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="352dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/task_edit_description_input"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        android:layout_marginTop="16dp"
+        android:background="#9DC4FF"
+        android:hint="@string/new_description"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintHorizontal_bias="0.409"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3"
         app:layout_constraintVertical_bias="0.0">
 
-        <TextView
-            android:id="@+id/task_activity_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/lobster"
-            android:padding="8dp"
-            android:text="Example description"
-            android:textColor="#ffff"
-            android:textSize="15sp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
+        android:id="@+id/date_edit_task_layout"
         android:layout_width="183dp"
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
@@ -135,7 +127,7 @@
             app:srcCompat="@drawable/timeline_week" />
 
         <TextView
-            android:id="@+id/task_date_text"
+            android:id="@+id/task_edit_date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -148,7 +140,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/task_date_text"
+            android:layout_below="@id/task_edit_date_text"
             android:layout_marginLeft="17dp"
             android:layout_toRightOf="@id/image2"
             android:fontFamily="@font/lobster"
@@ -158,7 +150,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/task_start_time_layout"
+        android:id="@+id/edit_task_start_time_layout"
         android:layout_width="85dp"
         android:layout_height="25dp"
         android:layout_marginStart="112dp"
@@ -166,7 +158,7 @@
         android:background="@drawable/start_time_btn"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout1"
+        app:layout_constraintTop_toBottomOf="@+id/date_edit_task_layout"
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
@@ -178,7 +170,7 @@
             app:srcCompat="@drawable/clock" />
 
         <TextView
-            android:id="@+id/task_start_time_text"
+            android:id="@+id/edit_task_start_time_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -191,7 +183,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/task_start_time_text"
+            android:layout_below="@id/edit_task_start_time_text"
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@id/image3"
             android:fontFamily="@font/lobster"
@@ -210,8 +202,8 @@
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.116"
-        app:layout_constraintStart_toEndOf="@+id/task_start_time_layout"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout1"
+        app:layout_constraintStart_toEndOf="@+id/edit_task_start_time_layout"
+        app:layout_constraintTop_toBottomOf="@+id/date_edit_task_layout"
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
@@ -223,7 +215,7 @@
             app:srcCompat="@drawable/clock" />
 
         <TextView
-            android:id="@+id/task_end_time_text"
+            android:id="@+id/edit_task_end_time_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -236,7 +228,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/task_end_time_text"
+            android:layout_below="@id/edit_task_end_time_text"
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@id/image4"
             android:fontFamily="@font/lobster"
@@ -273,7 +265,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/task_reminder_switch"
+            android:id="@+id/edit_task_reminder_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -297,11 +289,11 @@
         app:layout_constraintTop_toTopOf="@+id/view3" />
 
     <Button
-        android:id="@+id/edit_task_btn"
+        android:id="@+id/confirm_change_task_btn"
         android:layout_width="262dp"
         android:layout_height="57dp"
         android:fontFamily="@font/lobster"
-        android:text="Edit Task"
+        android:text="Confirm Changes"
         android:textAllCaps="false"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

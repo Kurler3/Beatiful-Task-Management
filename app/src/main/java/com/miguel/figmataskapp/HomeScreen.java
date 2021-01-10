@@ -1,9 +1,9 @@
 package com.miguel.figmataskapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -22,9 +22,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter.OnTaskRemovedListener,
+public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter.OnTaskAdapterListener,
         CreateTaskFragment.OnTaskCreatedListener, DaysRecyclerAdapter.OnDayItemSelectedListener,
-        CalendarFragment.OnCalendarDateChangedListener {
+        CalendarFragment.OnCalendarDateChangedListener{
+
     public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     public static final String MAIN_TASKS_FRAG_MANAGER = "mainTasksFrag";
     public static final String CREATE_TASKS_FRAG_MANAGER = "createTasksFrag";
@@ -147,7 +148,6 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
         });
         snackbar.show();
     }
-
     @Override
     public void insertNewTask(Task task) {
         // Inserts the task
@@ -194,10 +194,6 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
 
         mCalendarFrag.setDate(mDate);
 
-        // Force changing of fragments
-        //fragmentManager.beginTransaction().hide(mActiveFrag).show(mMainTasksFrag).commit();
-        //mActiveFrag = mMainTasksFrag;
-
         Snackbar snackbar = Snackbar.make(mHomeScreenView, "Date changed!", Snackbar.LENGTH_SHORT);
         snackbar.setAction("OK", new View.OnClickListener() {
             @Override
@@ -207,7 +203,6 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
         });
         snackbar.show();
     }
-
     public interface OnMainTaskFragTaskChangedListener {
         void updateDateTaskList(String date, List<Task> taskList);
     }
@@ -215,5 +210,27 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
         this.mainTasksFragListener = listener;
     }
 
+    @Override
+    public void onTaskClicked(Task task) {
+        Intent intent = new Intent(this, ViewTaskActivity.class);
 
+        intent.putExtra(ViewTaskActivity.PASS_TASK, task);
+
+        startActivityForResult(intent, ViewTaskActivity.TASK_ACTIVITY_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==ViewTaskActivity.TASK_ACTIVITY_REQUEST && resultCode==RESULT_OK){
+            Task updatedTask = data.getParcelableExtra(ViewTaskActivity.RESULT_TASK);
+
+            taskViewModel.update(updatedTask);
+
+            Snackbar snackbar = Snackbar.make(mHomeScreenView, "Task Updated!", Snackbar.LENGTH_SHORT);
+            snackbar.setAction("Ok", v -> snackbar.dismiss());
+            snackbar.show();
+        }
+    }
 }

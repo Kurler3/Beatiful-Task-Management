@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -18,12 +17,12 @@ import java.util.ArrayList;
 public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder> {
     ArrayList<Task> mTaskArray;
     Context mContext;
-    OnTaskRemovedListener mTaskRemovedListener;
+    OnTaskAdapterListener mTaskAdapterListener;
 
-    public TaskRecyclerAdapter(OnTaskRemovedListener listener,Context mContext, ArrayList<Task> tasks) {
+    public TaskRecyclerAdapter(OnTaskAdapterListener listener, Context mContext, ArrayList<Task> tasks) {
         this.mContext = mContext;
         this.mTaskArray = tasks;
-        this.mTaskRemovedListener = listener;
+        this.mTaskAdapterListener = listener;
         this.mTaskArray = new ArrayList<>();
     }
 
@@ -41,6 +40,12 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
             mPopUpMenu = new PopupMenu(itemView.getContext(),taskItemOptions);
 
             CreateTaskItemOptions();
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (mTaskAdapterListener != null && position != RecyclerView.NO_POSITION)
+                    mTaskAdapterListener.onTaskClicked(mTaskArray.get(position));
+            });
         }
         private void CreateTaskItemOptions(){
             Menu menu = mPopUpMenu.getMenu();
@@ -53,7 +58,7 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
                         return true;
                     case R.id.task_item_options_menu_remove:
                         // Notify the Home Screen that need to remove task
-                        mTaskRemovedListener.removeTask(mTaskArray.get(getAdapterPosition()));
+                        mTaskAdapterListener.removeTask(mTaskArray.get(getAdapterPosition()));
                         return true;
                     default:
                         return true;
@@ -95,10 +100,11 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
     public Task getTaskAt(int position){
         return mTaskArray.get(position);
     }
-    public interface OnTaskRemovedListener{
+    public interface OnTaskAdapterListener {
         void removeTask(Task task);
+        void onTaskClicked(Task task);
     }
-    public OnTaskRemovedListener getTaskRemovedListener(){
-        return mTaskRemovedListener;
+    public OnTaskAdapterListener getTaskRemovedListener(){
+        return mTaskAdapterListener;
     }
 }
