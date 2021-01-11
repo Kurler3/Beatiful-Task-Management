@@ -1,5 +1,8 @@
 package com.miguel.figmataskapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -140,11 +143,21 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
     public void removeTask(Task removedTask) {
         taskViewModel.delete(removedTask);
 
+        // If the task removed had a reminder
+        if(removedTask.isHasReminder()){
+            HandleAlert(removedTask, false);
+        }
+
         //Show a Snackbar asking if want to undo, if want to undo
         Snackbar snackbar = Snackbar.make(mHomeScreenView, R.string.snack_bar_undo_delete, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo_delete, view -> {
             //If the user clicks on the undo button then insert the note back into database
             taskViewModel.insert(removedTask);
+
+            // If the task had a reminder then create it again when removing is undone
+            if(removedTask.isHasReminder()){
+                HandleAlert(removedTask, true);
+            }
         });
         snackbar.show();
     }
@@ -153,20 +166,92 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
         // Inserts the task
         taskViewModel.insert(task);
 
+        // If the task has a reminder then create a notification for the day of creation and start hour of it.
+        // Differentiate the notifications by the task's id.
+        if(task.isHasReminder()){
+            HandleAlert(task, true);
+        }
 
         Snackbar snackbar = Snackbar.make(mHomeScreenView,"Task added", Snackbar.LENGTH_SHORT);
-        snackbar.setAction("OK", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackbar.dismiss();
-            }
-        });
+        snackbar.setAction("OK", v -> snackbar.dismiss());
         snackbar.show();
     }
+    private void HandleAlert(Task task, boolean isCreating){
+        // If the task has a reminder then create a notification for the day of creation and start hour of it.
+        // Differentiate the notifications by the task's id.
 
+        // In format dd/MM/yyyy
+        String dateCreation = task.getDateCreation();
+        // In format 09:00
+        String startTime = task.getStartTime();
+        String[] timeParts = startTime.split(":");
+        // Set a calendar to use in the alarm manager
+        Calendar alarmDate = MainTasksFragment.getCalendarFromDate(dateCreation);
+        alarmDate.set(Calendar.HOUR_OF_DAY, Integer.valueOf(timeParts[0]));
+        alarmDate.set(Calendar.MINUTE, Integer.valueOf(timeParts[1]));
+
+        // Data that will be passed to the broadcastreceiver
+        String title = task.getTitle();
+        String description = task.getDescription();
+
+        int taskID = task.getId();
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, TaskNotificationReceiver.class);
+            // Passing extras
+        intent.putExtra(TaskNotificationReceiver.EXTRA_TASK_ID_NOTIFICATION, taskID);
+        intent.putExtra(TaskNotificationReceiver.EXTRA_TASK_TITLE_NOTIFICATION, title);
+        intent.putExtra(TaskNotificationReceiver.EXTRA_TASK_DESCRIPTION_NOTIFICATION, description);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                    taskID,
+                    intent,
+                    0);
+        if(isCreating){
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmDate.getTimeInMillis(), pendingIntent);
+        }else{
+            alarmManager.cancel(pendingIntent);
+        }
+    }
+
+    private void AlertUpdate(Task task){
+        // If the task has a reminder then create a notification for the day of creation and start hour of it.
+        // Differentiate the notifications by the task's id.
+
+        // In format dd/MM/yyyy
+        String dateCreation = task.getDateCreation();
+        // In format 09:00
+        String startTime = task.getStartTime();
+        String[] timeParts = startTime.split(":");
+        // Set a calendar to use in the alarm manager
+        Calendar alarmDate = MainTasksFragment.getCalendarFromDate(dateCreation);
+        alarmDate.set(Calendar.HOUR_OF_DAY, Integer.valueOf(timeParts[0]));
+        alarmDate.set(Calendar.MINUTE, Integer.valueOf(timeParts[1]));
+
+        // Data that will be passed to the broadcastreceiver
+        String title = task.getTitle();
+        String description = task.getDescription();
+
+        int taskID = task.getId();
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, TaskNotificationReceiver.class);
+        // Passing extras
+        intent.putExtra(TaskNotificationReceiver.EXTRA_TASK_ID_NOTIFICATION, taskID);
+        intent.putExtra(TaskNotificationReceiver.EXTRA_TASK_TITLE_NOTIFICATION, title);
+        intent.putExtra(TaskNotificationReceiver.EXTRA_TASK_DESCRIPTION_NOTIFICATION, description);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                taskID,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmDate.getTimeInMillis(), pendingIntent);
+    }
     @Override
     public void changeDay(int dayMonth) {
-        Calendar c = Calendar.getInstance();
+
+        Calendar c = MainTasksFragment.getCalendarFromDate(mDate);
         c.set(Calendar.DAY_OF_MONTH, dayMonth+1);
 
         mDate = DATE_FORMAT.format(c.getTime());
@@ -225,11 +310,28 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
 
         if(requestCode==ViewTaskActivity.TASK_ACTIVITY_REQUEST && resultCode==RESULT_OK){
             Task updatedTask = data.getParcelableExtra(ViewTaskActivity.RESULT_TASK);
+            boolean reminderChange = data.getBooleanExtra(ViewTaskActivity.TASK_REMINDER_CHANGED, false);
 
             taskViewModel.update(updatedTask);
 
             mMainTasksFrag.updateFrag(MainTasksFragment.getCalendarFromDate(mDate),
                     getTasksAtDate(mDate, mFullTasksList));
+
+            //Create or delete the alarm if there was a change in alarm. Update if there was no change in alarm
+            if(reminderChange){
+                if(updatedTask.isHasReminder()){
+                    // Create the alarm
+                    HandleAlert(updatedTask, true);
+                }else{
+                    // Delete the alarm
+                    HandleAlert(updatedTask, false);
+                }
+            }else{
+                // If the task had a reminder then update it
+                if(updatedTask.isHasReminder()){
+                    AlertUpdate(updatedTask);
+                }
+            }
 
             Snackbar snackbar = Snackbar.make(mHomeScreenView, "Task Updated!", Snackbar.LENGTH_SHORT);
             snackbar.setAction("Ok", v -> snackbar.dismiss());

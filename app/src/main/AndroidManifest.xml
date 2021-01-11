@@ -11,6 +11,7 @@
         android:theme="@style/Theme.FigmaTaskApp">
         <activity android:name=".ViewTaskActivity"></activity>
         <activity android:name=".EditTaskActivity"></activity>
+        <receiver android:name=".TaskNotificationReceiver"></receiver>
         <activity android:name=".HomeScreen" />
         <activity android:name=".MainActivity">
             <intent-filter>

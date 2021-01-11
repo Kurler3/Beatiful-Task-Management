@@ -21,6 +21,7 @@ public class ViewTaskActivity extends AppCompatActivity {
     private static final SimpleDateFormat timeIntervalTextFormat = new SimpleDateFormat("KK:mm a");
     public static final String PASS_TASK = "taskPassed";
     public static final String RESULT_TASK = "editedTask";
+    public static final String TASK_REMINDER_CHANGED = "taskReminderChanged";
     public static final int TASK_ACTIVITY_REQUEST = 2;
 
     ImageButton mBackArrowBtn;
@@ -93,6 +94,13 @@ public class ViewTaskActivity extends AppCompatActivity {
             Task editedTask = data.getParcelableExtra(EditTaskActivity.PASS_EDITED_TASK);
 
             Intent dataIntent = new Intent();
+
+            // If the HasReminder was changed then send an extra boolean to the homescreen
+            if(mTaskPassed.isHasReminder()!=editedTask.isHasReminder()){
+                dataIntent.putExtra(TASK_REMINDER_CHANGED, true);
+            }else{
+                dataIntent.putExtra(TASK_REMINDER_CHANGED, false);
+            }
 
             dataIntent.putExtra(RESULT_TASK, editedTask);
 
