@@ -228,6 +228,9 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
 
             taskViewModel.update(updatedTask);
 
+            mMainTasksFrag.updateFrag(MainTasksFragment.getCalendarFromDate(mDate),
+                    getTasksAtDate(mDate, mFullTasksList));
+
             Snackbar snackbar = Snackbar.make(mHomeScreenView, "Task Updated!", Snackbar.LENGTH_SHORT);
             snackbar.setAction("Ok", v -> snackbar.dismiss());
             snackbar.show();
