@@ -35,6 +35,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/lobster"
+        android:text="@string/my_task"
+        android:textColor="#ffff"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view3" />
 
     <Button
         android:id="@+id/button3"
@@ -117,199 +130,184 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="183dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/skip_btn"
+        android:layout_width="280dp"
+        android:layout_height="210dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3">
 
-        <ImageView
-            android:id="@+id/image2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="14dp"
-            app:srcCompat="@drawable/timeline_week" />
-
-        <TextView
-            android:id="@+id/task_date_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="3dp"
+        <Button
+            android:id="@+id/edit_task_btn"
+            android:layout_width="262dp"
+            android:layout_height="57dp"
             android:fontFamily="@font/lobster"
-            android:text="01, January, 2021"
-            android:textColor="#ffff"
-            android:textSize="11sp" />
+            android:text="Edit Task"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/task_date_text"
-            android:layout_marginLeft="17dp"
-            android:layout_toRightOf="@id/image2"
-            android:fontFamily="@font/lobster"
-            android:text="Date"
-            android:textColor="#007ABF"
-            android:textSize="10sp" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/task_start_time_layout"
+            android:layout_width="85dp"
+            android:layout_height="25dp"
+            android:background="@drawable/start_time_btn"
+            android:layout_above="@+id/relativeLayout"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="50dp">
 
-    <RelativeLayout
-        android:id="@+id/task_start_time_layout"
-        android:layout_width="85dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/start_time_btn"
-        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout1"
-        app:layout_constraintVertical_bias="0.0">
+            <ImageView
+                android:id="@+id/image3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                app:srcCompat="@drawable/clock" />
 
-        <ImageView
-            android:id="@+id/image3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            <TextView
+                android:id="@+id/task_start_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/lobster"
+                android:text="3:00 PM"
+                android:textColor="#ffff"
+                android:textSize="9sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/task_start_time_text"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@id/image3"
+                android:fontFamily="@font/lobster"
+                android:text="Task Start"
+                android:textColor="#007ABF"
+                android:textSize="7sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/edit_task_end_time_layout"
+            android:layout_width="85dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/end_time_btn"
+            android:layout_above="@+id/relativeLayout"
+            android:layout_toRightOf="@+id/task_start_time_layout"
             android:layout_marginLeft="8dp"
-            app:srcCompat="@drawable/clock" />
+            android:layout_marginBottom="15dp">
 
-        <TextView
-            android:id="@+id/task_start_time_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/image4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                app:srcCompat="@drawable/clock" />
+
+            <TextView
+                android:id="@+id/task_end_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/lobster"
+                android:text="4:00 PM"
+                android:textColor="#ffff"
+                android:textSize="9sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/task_end_time_text"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@id/image4"
+                android:fontFamily="@font/lobster"
+                android:text="Task End"
+                android:textColor="#007ABF"
+                android:textSize="7sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="183dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="17dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="2dp"
-            android:fontFamily="@font/lobster"
-            android:text="3:00 PM"
-            android:textColor="#ffff"
-            android:textSize="9sp" />
+            android:background="@drawable/skip_btn"
+            android:layout_above="@+id/edit_task_btn">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/task_start_time_text"
-            android:layout_marginLeft="4dp"
-            android:layout_toRightOf="@id/image3"
-            android:fontFamily="@font/lobster"
-            android:text="Task Start"
-            android:textColor="#007ABF"
-            android:textSize="7sp" />
+            <ImageView
+                android:id="@+id/clockImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="13dp"
+                app:srcCompat="@drawable/reminder" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/lobster"
+                android:text="Has Reminder"
+                android:textColor="#ffff"
+                android:textSize="12sp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/task_reminder_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="8dp"
+                android:checked="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="183dp"
+            android:layout_height="40dp"
+            android:background="@drawable/skip_btn"
+            android:layout_above="@+id/task_start_time_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp">
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                app:srcCompat="@drawable/timeline_week" />
+
+            <TextView
+                android:id="@+id/task_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/lobster"
+                android:text="01, January, 2021"
+                android:textColor="#ffff"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/task_date_text"
+                android:layout_marginLeft="17dp"
+                android:layout_toRightOf="@id/image2"
+                android:fontFamily="@font/lobster"
+                android:text="Date"
+                android:textColor="#007ABF"
+                android:textSize="10sp" />
+        </RelativeLayout>
 
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/edit_task_end_time_layout"
-        android:layout_width="85dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/end_time_btn"
-        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
-        app:layout_constraintStart_toEndOf="@+id/task_start_time_layout"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout1"
-        app:layout_constraintVertical_bias="0.0">
-
-        <ImageView
-            android:id="@+id/image4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            app:srcCompat="@drawable/clock" />
-
-        <TextView
-            android:id="@+id/task_end_time_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="2dp"
-            android:fontFamily="@font/lobster"
-            android:text="4:00 PM"
-            android:textColor="#ffff"
-            android:textSize="9sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/task_end_time_text"
-            android:layout_marginLeft="4dp"
-            android:layout_toRightOf="@id/image4"
-            android:fontFamily="@font/lobster"
-            android:text="Task End"
-            android:textColor="#007ABF"
-            android:textSize="7sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="183dp"
-        android:layout_height="40dp"
-
-        android:layout_marginBottom="84dp"
-        android:background="@drawable/skip_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/clockImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/reminder"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Has Reminder"
-            android:textSize="12sp"
-            android:fontFamily="@font/lobster"
-            android:textColor="#ffff"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"/>
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/task_reminder_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="8dp"/>
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/lobster"
-        android:text="@string/my_task"
-        android:textColor="#ffff"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view3" />
-
-    <Button
-        android:id="@+id/edit_task_btn"
-        android:layout_width="262dp"
-        android:layout_height="57dp"
-        android:fontFamily="@font/lobster"
-        android:text="Edit Task"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        app:layout_constraintVertical_bias="0.407" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

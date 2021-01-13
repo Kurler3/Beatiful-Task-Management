@@ -147,6 +147,9 @@ public class CreateTaskFragment extends Fragment {
     }
     private boolean CheckDateSelected(Date selectedDate){
         currentCalendar = Calendar.getInstance();
+        currentCalendar.set(Calendar.HOUR_OF_DAY, 8);
+        currentCalendar.set(Calendar.MINUTE, 0);
+        currentCalendar.set(Calendar.SECOND, 0);
 
         if(currentCalendar.getTime().after(selectedDate)){
             return false;

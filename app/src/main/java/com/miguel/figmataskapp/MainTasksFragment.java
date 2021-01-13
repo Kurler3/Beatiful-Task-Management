@@ -86,7 +86,7 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
                 // Communicate with the homescreen and tell it to remove this task
                 //mTaskRemovedListener.deleteTask(taskSwiped);
                 if(mTaskAdapter.getTaskRemovedListener()!=null){
-                    mTaskAdapter.getTaskRemovedListener().removeTask(taskSwiped);
+                    mTaskAdapter.getTaskRemovedListener().removeTask(taskSwiped, viewHolder.getAdapterPosition());
                 }
             }
         }).attachToRecyclerView(mTasksRecyclerView);
@@ -295,5 +295,8 @@ public class MainTasksFragment extends Fragment implements HomeScreen.OnMainTask
         mTaskAdapter.setTaskArray(tasks);
         mTaskAdapter.notifyDataSetChanged();
 
+    }
+    public TaskRecyclerAdapter getTaskAdapter(){
+        return mTaskAdapter;
     }
 }

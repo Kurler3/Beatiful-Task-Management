@@ -140,7 +140,7 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
     }
 
     @Override
-    public void removeTask(Task removedTask) {
+    public void removeTask(Task removedTask, int position) {
         taskViewModel.delete(removedTask);
 
         // If the task removed had a reminder
@@ -148,12 +148,13 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
             HandleAlert(removedTask, false);
         }
 
-        //Show a Snackbar asking if want to undo, if want to undo
+        //Show a Snackbar asking if want to undo
         Snackbar snackbar = Snackbar.make(mHomeScreenView, R.string.snack_bar_undo_delete, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo_delete, view -> {
             //If the user clicks on the undo button then insert the note back into database
             taskViewModel.insert(removedTask);
 
+            mMainTasksFrag.getTaskAdapter().insertTaskInAdapter(removedTask, position);
             // If the task had a reminder then create it again when removing is undone
             if(removedTask.isHasReminder()){
                 HandleAlert(removedTask, true);
@@ -189,11 +190,11 @@ public class HomeScreen extends AppCompatActivity implements TaskRecyclerAdapter
         Calendar alarmDate = MainTasksFragment.getCalendarFromDate(dateCreation);
         alarmDate.set(Calendar.HOUR_OF_DAY, Integer.valueOf(timeParts[0]));
         alarmDate.set(Calendar.MINUTE, Integer.valueOf(timeParts[1]));
+        alarmDate.set(Calendar.SECOND, 0);
 
-        // Data that will be passed to the broadcastreceiver
+        // Data that will be passed to the broadcast receiver
         String title = task.getTitle();
         String description = task.getDescription();
-
         int taskID = task.getId();
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

@@ -58,7 +58,8 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
                         return true;
                     case R.id.task_item_options_menu_remove:
                         // Notify the Home Screen that need to remove task
-                        mTaskAdapterListener.removeTask(mTaskArray.get(getAdapterPosition()));
+                        mTaskAdapterListener.removeTask(mTaskArray.get(getAdapterPosition()),
+                                getAdapterPosition());
                         return true;
                     default:
                         return true;
@@ -94,15 +95,18 @@ public class TaskRecyclerAdapter extends RecyclerView.Adapter<TaskRecyclerAdapte
 
     public void setTaskArray(ArrayList<Task> taskArray){
         this.mTaskArray = new ArrayList<>(taskArray);
-
     }
 
     public Task getTaskAt(int position){
         return mTaskArray.get(position);
     }
     public interface OnTaskAdapterListener {
-        void removeTask(Task task);
+        void removeTask(Task task, int position);
         void onTaskClicked(Task task);
+    }
+    public void insertTaskInAdapter(Task task, int position){
+        mTaskArray.add(position, task);
+        notifyItemInserted(position);
     }
     public OnTaskAdapterListener getTaskRemovedListener(){
         return mTaskAdapterListener;
